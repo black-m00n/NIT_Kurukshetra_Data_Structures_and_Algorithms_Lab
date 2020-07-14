@@ -6,6 +6,7 @@ void swap(ll &a, ll &b){
 	a = b;
 	b = temp;
 }
+// This is Lomuto partioning
 ll partition(ll arr[], ll start, ll end){
 	ll i = start, j; // or i = start-1
 	ll pivot = arr[end];
