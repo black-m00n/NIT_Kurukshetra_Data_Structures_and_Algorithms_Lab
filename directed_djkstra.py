@@ -1,0 +1,173 @@
+# Python3 implementation to find the
+# shortest path in a directed
+# graph from source vertex to
+# the destination vertex
+class Pair:
+	def __init__(self, first, second):
+		self.first = first
+		self.second = second
+infi = 1000000000;
+
+# Class of the node
+class Node:
+
+	# Adjacency list that shows the
+	# vertexNumber of child vertex
+	# and the weight of the edge
+	def __init__(self, vertexNumber):	
+		self.vertexNumber = vertexNumber
+		self.children = []
+
+	# Function to add the child for
+	# the given node
+	def Add_child(self, vNumber, length):
+		p = Pair(vNumber, length);
+		self.children.append(p);
+def pp(dist, s):
+	for i in range(len(dist)):
+		if (dist[i] == infi):
+		
+			print("Distance of {}th vertex from source vertex {} is: infinity".format(
+					chr(65+i), chr(65+s)));
+			continue;	
+		print("Distance of {}th vertex from source vertex {} is: {}".format(
+						chr(65+i), chr(65+s), dist[i]));
+	
+# Function to find the distance of
+# the node from the given source
+# vertex to the destination vertex
+def dijkstraDist(g, s, path):
+	
+	# Stores distance of each
+	# vertex from source vertex
+	dist = [infi for i in range(len(g))]
+
+	# bool array that shows
+	# whether the vertex 'i'
+	# is visited or not
+	visited = [False for i in range(len(g))]
+	
+	for i in range(len(g)):	
+		path[i] = -1
+	dist[s] = 0;
+	path[s] = -1;
+	current = s;
+
+	# Set of vertices that has
+	# a parent (one or more)
+	# marked as visited
+	sett = set()	
+	print("Start")
+	k =1
+	while (True):
+		pp(dist, s)
+		print("\n\n")
+		print("Iteration {}:".format(k))
+		k += 1
+		# Mark current as visited
+		visited[current] = True;
+		for i in range(len(g[current].children)):
+			v = g[current].children[i].first;		
+			if (visited[v]):
+				continue;
+
+			# Inserting into the
+			# visited vertex
+			sett.add(v);
+			alt = dist[current] + g[current].children[i].second;
+
+			# Condition to check the distance
+			# is correct and update it
+			# if it is minimum from the previous
+			# computed distance
+			if (alt < dist[v]):	
+				dist[v] = alt;
+				path[v] = current;	
+		if current in sett:		
+			sett.remove(current);	
+		if (len(sett) == 0):
+			break;
+
+		# The new current
+		minDist = infi;
+		index = 0;
+
+		# Loop to update the distance
+		# of the vertices of the graph
+		for a in sett:	
+			if (dist[a] < minDist):		
+				minDist = dist[a];
+				index = a;		
+		current = index;
+	return dist;
+
+# Function to print the path
+# from the source vertex to
+# the destination vertex
+def printPath(path, i, s):
+	if (i != s):
+		
+		# Condition to check if
+		# there is no path between
+		# the vertices
+		if (path[i] == -1):	
+			print("Path not found!!");
+			return;	
+		printPath(path, path[i], s);
+		print(path[i] + " ");
+	
+# Driver Code
+if __name__=='__main__':
+	
+	v = []
+	n = 6
+	s = 0;
+
+	# Loop to create the nodes
+	for i in range(n):
+		a = Node(i);
+		v.append(a);
+
+	# Creating directed
+	# weighted edges
+	
+	v[0].Add_child(1, 3);
+	v[0].Add_child(3, 1);
+	v[0].Add_child(4, 5);
+
+	v[1].Add_child(0, 4);
+	v[1].Add_child(2, 4);
+	v[1].Add_child(3, 3);
+
+	v[2].Add_child(1, 6);
+	v[2].Add_child(3, 4);
+	v[2].Add_child(4, 2);
+	v[2].Add_child(5, 5);
+
+	v[3].Add_child(0, 4);
+	v[3].Add_child(1, 1);
+	v[3].Add_child(2, 4);
+	v[3].Add_child(4, 6);
+
+	v[4].Add_child(0, 4);
+	v[4].Add_child(2, 2);
+	v[4].Add_child(3, 7);
+	v[4].Add_child(5, 3);
+
+	v[5].Add_child(2, 7);
+	v[5].Add_child(4, 2);
+	path = [0 for i in range(len(v))];
+	dist = dijkstraDist(v, s, path);
+
+	# Loop to print the distance of
+	# every node from source vertex
+	for i in range(len(dist)):
+		if (dist[i] == infi):
+		
+			print("{0} and {1} are not " +
+							"connected".format(chr(65+i), chr(65+s)));
+			continue;	
+		print("Distance of {}th vertex from source vertex {} is: {}".format(
+						chr(65+i), chr(65+s), dist[i]));
+	
+	# This code is contributed by pratham76
